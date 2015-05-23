@@ -25,7 +25,7 @@ void GetRunSample(TString who = "all", Int_t &nskip, Int_t &nrun){
   return;
 }
 
-void RunGridHyperESD(TString runmode="test", Bool_t isMC=kFALSE, TString fname="Hypertriton_LHC11h"){
+void RunGridHyperESD(TString runmode="test", Bool_t isMC=kFALSE, TString fname="test"){
 
   TString who = runmode;
   if (who.Contains("stefano",TString::kIgnoreCase) || who.Contains("stefania",TString::kIgnoreCase) || who.Contains("elena",TString::kIgnoreCase) || who.Contains("all",TString::kIgnoreCase)){
@@ -71,6 +71,7 @@ void RunGridHyperESD(TString runmode="test", Bool_t isMC=kFALSE, TString fname="
   gSystem->Load("libCORRFW.so");
   gSystem->Load("libPWGHFbase.so");
   gSystem->Load("libPWGHFvertexingHF.so");
+  gSystem->Load("libPWGLFSTRANGENESS.so");
 
   //----Create the analysis manager----
   
@@ -108,15 +109,20 @@ void RunGridHyperESD(TString runmode="test", Bool_t isMC=kFALSE, TString fname="
   gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    AliAnalysisTaskSE *setupTask = AddTaskPIDResponse(isMC,kTRUE);
   
-   gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDqa.C");
-   AliAnalysisTaskPIDqa *pidQA = AddTaskPIDqa();
+   //gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDqa.C");
+   //AliAnalysisTaskPIDqa *pidQA = AddTaskPIDqa();
 
-   gROOT->LoadMacro("./AliAnalysisTaskHypertriton3.cxx++g");
-   gROOT->LoadMacro("./AddTaskHypertriton3.C");
-   AliAnalysisTaskHypertriton3 *taskHyper = AddTaskHypertriton3(isMC);//isMC= choose if MC or Data; FillTree= choose if filling the TTree or not
-  
-  
-  
+   //gROOT->LoadMacro("./AliAnalysisTaskHypertriton3.cxx++g");
+   //gROOT->LoadMacro("./AddTaskHypertriton3.C");
+   gROOT->LoadMacro("$ALICE_PHYSICS/PWGLF/STRANGENESS/Hypernuclei/Hyp3Body/AddTaskHypertriton3.C");
+
+   AliAnalysisTaskHypertriton3 *taskHyper = AddTaskHypertriton3(kFALSE,kFALSE);//isMC= choose if MC or Data; FillTree= choose if filling the TTree or not
+   //gROOT->LoadMacro("$ALICE_PHYSICS/PWGLF/STRANGENESS/Hypernuclei/AddTask_Helium3Pi.C");
+   //AliAnalysisTaskHelium3Pi *tskHypertr = AddTask_Helium3Pi("hypertriton_Ramona");
+
+   //gROOT->LoadMacro("$ALICE_PHYSICS/PWGLF/STRANGENESS/Hypernuclei/AddTask_doenigus_HdibaryonLPpi.C");
+   //AliAnalysisTaskHdibaryonLPpi *tskHyper = AddTask_doenigus_HdibaryonLPpi();
+   
   mgr->InitAnalysis();
   mgr->PrintStatus();
   // Start analysis in grid.
@@ -143,7 +149,7 @@ AliAnalysisGrid* CreateAlienHandler(TString runmode, Bool_t isMC, TString fname,
   plugin->SetAliPhysicsVersion("vAN-20150131");
 
   if(isMC){
-    plugin->SetGridDataDir("/alice/sim/2012/LHC12d3/");
+    plugin->SetGridDataDir("/alice/sim/2014/LHC14a6/");
     plugin->SetDataPattern("*/*AliESDs.root");
     plugin->SetRunPrefix("");
     
@@ -250,8 +256,7 @@ AliAnalysisGrid* CreateAlienHandler(TString runmode, Bool_t isMC, TString fname,
   cout << "-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2" << endl;
 
   //plugin->SetAdditionalLibs("libSTEERBase.so libESD.so AliAnalysisTaskHypertriton3.h AliAnalysisTaskHypertriton3.cxx libGui.so libProof.so libMinuit.so libRAWDatabase.so libRAWDatarec.so libCDB.so libSTEER.so libITSbase.so libITSrec.so libANALYSIS.so libANALYSISalice.so libPWGHFbase.so libPWGHFvertexingHF.so libOADB.so");
-  plugin->SetAdditionalLibs("libSTEERBase.so AliAnalysisTaskHypertriton3.h AliAnalysisTaskHypertriton3.cxx libESD.so libPWGflowBase.so libPWGflowTasks.so libPWGHFbase.so libPWG\
-HFvertexingHF.so libOADB.so"); 
+  plugin->SetAdditionalLibs("AliAnalysisTaskHypertriton3.h AliAnalysisTaskHypertriton3.cxx libPWGflowBase.so libPWGflowTasks.so libPWGLFSTRANGENESS.so"); // 
   plugin->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT -I$ALICE_PHYSICS/include -g");
 
   cout << "-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3" << endl;

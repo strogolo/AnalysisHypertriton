@@ -46,7 +46,7 @@ AliAnalysisTaskHypertriton3 *AddTaskHypertriton3(Bool_t readMC=kFALSE, Bool_t fi
   // Create and configure the task
   
   AliAnalysisTaskHypertriton3 *taskhyp = new AliAnalysisTaskHypertriton3();
-  taskhyp->SetReadMC(kFALSE);
+  taskhyp->SetReadMC(readMC);
   taskhyp->SetFillTree(kFALSE);
   
   mgr->AddTask(taskhyp);
@@ -62,7 +62,7 @@ AliAnalysisTaskHypertriton3 *AddTaskHypertriton3(Bool_t readMC=kFALSE, Bool_t fi
   coutput = mgr->CreateContainer("listHypertriton",
 				 TList::Class(),
 				 AliAnalysisManager::kOutputContainer,
-				 "trogolo_HyperTri.root" );    
+				 AliAnalysisManager::GetCommonFileName());    
   
   
 
